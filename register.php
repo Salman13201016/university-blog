@@ -1,6 +1,7 @@
 
 <?php
 	include 'database/connection.php';
+	/* PHP MAILER LIBRARY */
 	use PHPMailer\PHPMailer\PHPMailer;
 	use PHPMailer\PHPMailer\Exception;
 
@@ -13,30 +14,43 @@
 	$pwd='';
 	$email_check='';
 	if(isset($_POST['login'])){
+		/* Sanitaze The Input Data */
 		$name = mysqli_escape_string($conn,$_POST['name']);
 		$email = mysqli_escape_string($conn,$_POST['email']);
 		$password = mysqli_escape_string($conn,$_POST['password']);
 		$confirmPassword = mysqli_escape_string($conn,$_POST['confirmpassword']);
 		$mobile = mysqli_escape_string($conn,$_POST['mobile']);
 		$university = mysqli_escape_string($conn,$_POST['university']);
+
+		/* Check Email Exist Or Not */
 		$email_exist = "SELECT email FROM user WHERE email ='$email'";
 		$query = mysqli_query($conn,$email_exist);
 		if(mysqli_num_rows($query)>0){
 			$email_check = "You email is already existed";
 		}
 		
+		/* The Input Can not be Empty */
 		else if(empty($name) || empty($email) || empty($password) || empty($confirmPassword) || empty($mobile) || empty($university)){
 			$error = "This field is required";
 		}
+
+		/* The Length of field name must be grater than 4 */
 		else if(strlen($name)<5){
 			$length = "Length must be greater than 4";
 		}
+
+		/* Password have to match with with confirm password */
 		else if($password!=$confirmPassword){
 			$pwd="Your Password Does Not Match";
 		}
 		else{
+			/* Encrypted password */
 			$password = md5($password);
+
+			/* Generate a new verification key with encryption */
 			$vkey = md5(time().$email);
+
+			/* Insert Data into user table */
 			$sql = "INSERT INTO user (name,email,password,mobile,university,v_key,v_status) VALUES ('$name','$email','$password','$mobile','$university','$vkey',0)";
 			$query = mysqli_query($conn,$sql);
 
@@ -49,22 +63,23 @@
 
 				$mail->SMTPAuth = true;
 				
-				$mail->Username = "salmanmdsultan@gmail.com";
+				/* Provide User Name and Password as your email address(FromEmail) */
+				$mail->Username = "Your Email(From Email)";
 
-				$mail->Password = "Allahisone244343244343";
+				$mail->Password = "The Password of Your Email";
 
 				$mail->SMTPSecure ="tls";
 
 				$mail->Port= 587;
 
-				$mail->From = "salmanmdsultan@gmail.com";
+				$mail->From = "From Email";
 
-				$mail->FromName = "Salman";
+				$mail->FromName = "The Name of The Message user will see";
 
 				$mail->addAddress($email,"Salman");
 
 				$mail->isHTML(true);
-
+				/* Set Subject and messages of body */
 				$mail->Subject = "Email Verification From eshikhonBlog";
 
 				$mail->Body = "<a href='http://localhost/wdev-N191-2/Blog/verify.php?vkey=$vkey'>Click This Activation Link</a>";
