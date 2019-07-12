@@ -3,6 +3,9 @@
     $error = '';
     $invalid = '';
     session_start();
+    if(isset($_SESSION['login_user'])){
+        header('location:index.php');
+    }
     if(isset($_POST['login'])){
         $email = mysqli_real_escape_string($conn,$_POST['email']);
         $password = mysqli_real_escape_string($conn,$_POST['password']);
@@ -16,10 +19,7 @@
             $query = mysqli_query($conn,$sql);
             if(mysqli_num_rows($query)>=1){
                 $_SESSION['login_user']=$email;
-                if(isset($_SESSION['login_user'])){
-                    header('location:index.php');
-                }
-                
+                header('location:index.php');
             }
             else{
                $invalid = "Invalid Email & Password";
