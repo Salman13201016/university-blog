@@ -10,19 +10,9 @@
 
     $login_session = $row['name'];
     $_SESSION['login_id'] = $row['id'];
-    
 
-    // if(isset($login_session)){
-    //     header('location:index.php');
-    // }
     if(!isset($login_session)){
         mysqli_close($conn);
         header('location:login.php');
     }
-    // if(isset($_SESSION['login_id'])){
-    //     header('location:index.php');
-    // }
-    // else{
-    //     header('location:index.php');
-    // }
 ?>

@@ -2,10 +2,10 @@
     include 'database/connection.php';
     $error = '';
     $invalid = '';
-    session_start();
-    if(isset($_SESSION['login_user'])){
-        header('location:index.php');
-    }
+	session_start();
+	if(isset($_SESSION['login_user'])){
+		header('location:index.php');
+	}
     if(isset($_POST['login'])){
         $email = mysqli_real_escape_string($conn,$_POST['email']);
         $password = mysqli_real_escape_string($conn,$_POST['password']);
