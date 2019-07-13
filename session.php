@@ -9,8 +9,6 @@
     $row = mysqli_fetch_assoc($query);
 
     $login_session = $row['name'];
-    $_SESSION['login_id'] = $row['id'];
-
     if(!isset($login_session)){
         mysqli_close($conn);
         header('location:login.php');
